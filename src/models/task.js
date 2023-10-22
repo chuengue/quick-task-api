@@ -1,5 +1,4 @@
 const sequelize = require("sequelize");
-const uuid = require("uuid");
 const database = require("../db");
 const schema = "";
 

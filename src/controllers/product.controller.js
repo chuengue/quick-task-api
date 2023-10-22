@@ -1,4 +1,5 @@
 const modelTasks = require("../models/task");
+const errorMessages = require("../utils/errorMessages");
 
 const Sequelize = require("sequelize");
 
@@ -17,30 +18,23 @@ const createResponse = (task) => {
     updatedAt: task.updatedAt,
     createdAt: task.createdAt,
   };
+
   return responseModel;
 };
-const createErrorResponse = (code, message) => {
-  return {
-    error: {
-      code,
-      message: {
-        text: message,
-      },
-    },
-  };
-};
+
 module.exports = {
   async GetAllTasks(req, res) {
     try {
       const tasks = await modelTasks.findAll();
       const totalItens = tasks.length;
       const response = {
+        sucess: true,
         data: tasks.map((e) => createResponse(e)),
         totalItens,
       };
       return res.json(response);
     } catch (error) {
-      res.status(500).json(createErrorResponse(2, "Erro ao buscar Tarefas."));
+      res.status(500).json(errorMessages.ERROR_1008);
       return console.error("Error: " + error.message);
     }
   },
@@ -52,11 +46,7 @@ module.exports = {
       }
       for (const task of tasks) {
         if (task.priority < 1 || task.priority > 4) {
-          return res
-            .status(400)
-            .json(
-              createErrorResponse(1, "Prioridade fora do intervalo válido (de 1 a 4)."),
-            );
+          return res.status(400).json(errorMessages.ERROR_1001);
         }
       }
       const modelTask = {
@@ -69,10 +59,10 @@ module.exports = {
         endDateRoutine: tasks.routineFrequency.endDate,
       };
       const createdTasks = await modelTasks.create(modelTask);
-      return res.json(createResponse(createdTasks));
+      return res.json(createResponse({ sucess: true, data: createdTasks }));
     } catch (error) {
       console.error("Error create: " + error);
-      return res.status(500).json(createErrorResponse(9, "Erro o criar tarefa"));
+      return res.status(500).json(errorMessages.ERROR_1002);
     }
   },
   async Update(req, res) {
@@ -81,20 +71,13 @@ module.exports = {
       const task = await modelTasks.findByPk(taskId);
 
       if (!task) {
-        return res.status(404).json(createErrorResponse(7, "Tarefa não encontrada."));
+        return res.status(404).json(errorMessages.ERROR_1003);
       }
 
       if (req.body.name && req.body.name.trim() !== "") {
         task.name = req.body.name;
       } else {
-        return res
-          .status(400)
-          .json(
-            createErrorResponse(
-              10,
-              "O campo 'Nome' é obrigatório e não pode estar vazio.",
-            ),
-          );
+        return res.status(400).json(errorMessages.ERROR_1004);
       }
       task.description = req.body.description;
       task.date = req.body.date;
@@ -111,10 +94,10 @@ module.exports = {
 
       await task.save();
 
-      return res.json(createResponse(task));
+      return res.json({ sucess: true, data: createResponse(task) });
     } catch (error) {
       console.error("Error update: " + error.message);
-      return res.status(500).json(createErrorResponse(8, "Erro ao atualizar tarefa."));
+      return res.status(500).json(errorMessages.ERROR_1005);
     }
   },
   async GetById(req, res) {
@@ -123,13 +106,13 @@ module.exports = {
       const task = await modelTasks.findByPk(taskId);
 
       if (!task) {
-        return res.status(404).json(createErrorResponse(3, "Tarefa não encontrada"));
+        return res.status(404).json(errorMessages.ERROR_1003);
       }
 
-      return res.json(createResponse(task));
+      return res.json({ sucess: true, data: createResponse(task) });
     } catch (error) {
       console.error("Erro getById: " + error.message);
-      return res.status(500).json(createErrorResponse(2, "Erro ao buscar Tarefa."));
+      return res.status(500).json(errorMessages.ERROR_1008);
     }
   },
   async Search(req, res) {
@@ -169,41 +152,40 @@ module.exports = {
           });
           break;
         default:
-          return res
-            .status(400)
-            .json(createErrorResponse(4, "Critério de pesquisa inválido"));
+          return res.status(400).json(errorMessages.ERROR_1006);
       }
 
       if (searchResult.length === 0) {
-        return res.status(404).json(createErrorResponse(3, "Nenhuma tarefa encontrada"));
+        return res.status(404).json(errorMessages.ERROR_1003);
       }
       const totalItens = searchResult.length;
       const response = {
+        sucess: true,
         data: searchResult.map((e) => createResponse(e)),
         totalItens,
       };
       return res.json(response);
     } catch (error) {
       console.error("Erro na pesquisa: " + error.message);
-      return res.status(500).json(2, "Erro ao buscar tarefas.");
+      return res.status(500).json(errorMessages.ERROR_1008);
     }
   },
   async Delete(req, res) {
     try {
-      const taskId = req.params.id; // Use req.params para obter o ID da URL
+      const taskId = req.params.id;
       console.log(req.params.id);
       const task = await modelTasks.findByPk(taskId);
 
       if (!task) {
-        return res.status(404).json(createErrorResponse(3, "Tarefa não encontrada"));
+        return res.status(404).json(errorMessages.ERROR_1003);
       }
 
       await task.destroy();
 
-      return res.json({ message: "Tarefa excluída com sucesso", code: 10 });
+      return res.json({ sucess: true, message: "Tarefa excluída com sucesso" });
     } catch (error) {
       console.error("Error delete: " + error.message);
-      return res.status(500).json(createErrorResponse(11, "Erro ao excluir a tarefa."));
+      return res.status(500).json(errorMessages.ERROR_1007);
     }
   },
 };
