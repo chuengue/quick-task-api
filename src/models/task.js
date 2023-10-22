@@ -32,11 +32,13 @@ Tasks.init(
     },
     isRoutine: {
       type: sequelize.BOOLEAN,
-      allowNull: false,
+      defaultValue: false,
     },
-    routineFrequency: {
-      type: sequelize.TEXT,
-      allowNull: true,
+    startDateRoutine: {
+      type: sequelize.STRING,
+    },
+    endDateRoutine: {
+      type: sequelize.STRING,
     },
   },
   {
