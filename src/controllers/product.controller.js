@@ -77,12 +77,13 @@ module.exports = {
   },
   async Update(req, res) {
     try {
-      const taskId = req.query.id;
+      const taskId = req.params.id;
       const task = await modelTasks.findByPk(taskId);
 
       if (!task) {
         return res.status(404).json(createErrorResponse(7, "Tarefa não encontrada."));
       }
+
       if (req.body.name && req.body.name.trim() !== "") {
         task.name = req.body.name;
       } else {
@@ -98,8 +99,14 @@ module.exports = {
       task.description = req.body.description;
       task.date = req.body.date;
       task.priority = req.body.priority;
-      task.startDateRoutine = req.body.routineFrequency.startDate;
-      task.endDateRoutine = req.body.routineFrequency.endDate;
+
+      if (req.body.routineFrequency) {
+        if (req.body.routineFrequency.startDate && req.body.routineFrequency.endDate) {
+          task.startDateRoutine = req.body.routineFrequency.startDate;
+          task.endDateRoutine = req.body.routineFrequency.endDate;
+        }
+      }
+
       task.updatedAt = req.body.updatedAt;
 
       await task.save();
@@ -112,7 +119,7 @@ module.exports = {
   },
   async GetById(req, res) {
     try {
-      const taskId = req.query.id;
+      const taskId = req.params.id;
       const task = await modelTasks.findByPk(taskId);
 
       if (!task) {
@@ -183,16 +190,20 @@ module.exports = {
   },
   async Delete(req, res) {
     try {
-      const taskId = req.query.id;
-      console.log(taskId);
+      const taskId = req.params.id; // Use req.params para obter o ID da URL
+      console.log(req.params.id);
       const task = await modelTasks.findByPk(taskId);
+
       if (!task) {
-        return res.status(404).json(createErrorResponse(3, "Tarefa nao encontrada"));
+        return res.status(404).json(createErrorResponse(3, "Tarefa não encontrada"));
       }
+
       await task.destroy();
-      return res.json({ message: "deleted task", code: 10 });
+
+      return res.json({ message: "Tarefa excluída com sucesso", code: 10 });
     } catch (error) {
-      return console.error("Error update: " + error.message);
+      console.error("Error delete: " + error.message);
+      return res.status(500).json(createErrorResponse(11, "Erro ao excluir a tarefa."));
     }
   },
 };

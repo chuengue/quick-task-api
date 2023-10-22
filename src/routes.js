@@ -1,12 +1,12 @@
 const express = require("express");
-const productController = require("./controllers/product.controller");
+const taskController = require("./controllers/product.controller");
 const routes = express.Router();
 
-routes.get("/list", productController.GetAllTasks);
-routes.post("/create", productController.Create);
-routes.post("/update", productController.Update);
-routes.get("/getOne", productController.GetById);
-routes.post("/delete", productController.Delete);
-routes.get("/search", productController.Search);
+routes.get("/task", taskController.GetAllTasks);
+routes.post("/create", taskController.Create);
+routes.put("/task/:id", taskController.Update);
+routes.get("/task/:id", taskController.GetById);
+routes.delete("/task/:id", taskController.Delete);
+routes.get("/search", taskController.Search);
 
 module.exports = routes;
