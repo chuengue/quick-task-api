@@ -41,25 +41,23 @@ module.exports = {
 
   async Create(req, res) {
     try {
-      const tasks = req.body;
-      if (tasks.isRoutine) {
+      const task = req.body;
+      if (task.isRoutine) {
       }
-      for (const task of tasks) {
-        if (task.priority < 1 || task.priority > 4) {
-          return res.status(400).json(errorMessages.ERROR_1001);
-        }
+      if (task.priority < 1 || task.priority > 4) {
+        return res.status(400).json(errorMessages.ERROR_1001);
       }
       const modelTask = {
-        name: tasks.name,
-        description: tasks.description,
-        date: tasks.date,
-        priority: tasks.priority,
-        isRoutine: tasks.isRoutine,
-        startDateRoutine: tasks.routineFrequency.startDate,
-        endDateRoutine: tasks.routineFrequency.endDate,
+        name: task.name,
+        description: task.description,
+        date: task.date,
+        priority: task.priority,
+        isRoutine: task.isRoutine,
+        startDateRoutine: task.routineFrequency.startDate,
+        endDateRoutine: task.routineFrequency.endDate,
       };
-      const createdTasks = await modelTasks.create(modelTask);
-      return res.json(createResponse({ sucess: true, data: createdTasks }));
+      const createdTask = await modelTasks.create(modelTask);
+      return res.json({ sucess: true, data: createResponse(createdTask) });
     } catch (error) {
       console.error("Error create: " + error);
       return res.status(500).json(errorMessages.ERROR_1002);
