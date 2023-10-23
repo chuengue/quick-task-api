@@ -25,7 +25,9 @@ const createResponse = (task) => {
 module.exports = {
   async GetAllTasks(req, res) {
     try {
-      const tasks = await modelTasks.findAll();
+      const tasks = await modelTasks.findAll({
+        order: [["date", "ASC"]],
+      });
       const totalItens = tasks.length;
       const response = {
         sucess: true,
