@@ -31,7 +31,7 @@ module.exports = {
       const totalItens = tasks.length;
       const response = {
         sucess: true,
-        data: tasks.map((e) => createResponse(e)),
+        results: tasks.map((e) => createResponse(e)),
         totalItens,
       };
       return res.json(response);
@@ -59,7 +59,7 @@ module.exports = {
         endDateRoutine: task.routineFrequency.endDate,
       };
       const createdTask = await modelTasks.create(modelTask);
-      return res.json({ sucess: true, data: createResponse(createdTask) });
+      return res.json({ sucess: true, results: createResponse(createdTask) });
     } catch (error) {
       console.error("Error create: " + error);
       return res.status(500).json(errorMessages.ERROR_1002);
@@ -94,7 +94,7 @@ module.exports = {
 
       await task.save();
 
-      return res.json({ sucess: true, data: createResponse(task) });
+      return res.json({ sucess: true, results: createResponse(task) });
     } catch (error) {
       console.error("Error update: " + error.message);
       return res.status(500).json(errorMessages.ERROR_1005);
@@ -109,7 +109,7 @@ module.exports = {
         return res.status(404).json(errorMessages.ERROR_1003);
       }
 
-      return res.json({ sucess: true, data: createResponse(task) });
+      return res.json({ sucess: true, results: createResponse(task) });
     } catch (error) {
       console.error("Erro getById: " + error.message);
       return res.status(500).json(errorMessages.ERROR_1008);
@@ -161,7 +161,7 @@ module.exports = {
       const totalItens = searchResult.length;
       const response = {
         sucess: true,
-        data: searchResult.map((e) => createResponse(e)),
+        results: searchResult.map((e) => createResponse(e)),
         totalItens,
       };
       return res.json(response);
@@ -177,7 +177,7 @@ module.exports = {
       const task = await modelTasks.findByPk(taskId);
 
       if (!task) {
-        return res.status(404).json(errorMessages.ERROR_1003);
+        return res.status(404).json(da.ERROR_1003);
       }
 
       await task.destroy();
