@@ -26,20 +26,20 @@ module.exports = {
   async GetAllTasks(req, res) {
     try {
       const tasks = await modelTasks.findAll({
-        order: [["date", "ASC"]],
+        order: [["priority", "ASC"], ["date", "ASC"]],
       });
-      const totalItens = tasks.length;
+      const totalItems = tasks.length;
       const response = {
-        sucess: true,
+        success: true,
         results: tasks.map((e) => createResponse(e)),
-        totalItens,
+        totalItems,
       };
       return res.json(response);
     } catch (error) {
       res.status(500).json(errorMessages.ERROR_1008);
-      return console.error("Error: " + error.message);
+      console.error("Error: " + error.message);
     }
-  },
+  },  
 
   async Create(req, res) {
     try {
