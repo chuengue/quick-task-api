@@ -1,6 +1,6 @@
 const express = require("express");
 const api = express();
-const router = require("./src/routes");
+const router = require("./routes");
 
 api.use((req, res, next) => {
   console.log(`Solicitação recebida em: ${new Date()}`);
