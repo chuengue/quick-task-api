@@ -1,11 +1,29 @@
 require('dotenv').config();
+
 module.exports = {
-  development: {
-    username: process.env.DATABASE_USERNAME,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE_NAME,
-    host: process.env.DATABASE_HOST,
-    port: process.env.DATABASE_PORT,
+  dev: {
+    username: process.env.DATABASE_DEV_USERNAME,
+    password: process.env.DATABASE_DEV_PASSWORD,
+    database: process.env.DATABASE_DEV_NAME,
+    host: process.env.DATABASE_DEV_HOST,
+    port: process.env.DATABASE_DEV_PORT,
+    dialect: 'mysql',
+    
+  },
+  test: {
+    username: process.env.DATABASE_TEST_TEST_USERNAME,
+    password: process.env.DATABASE_TEST_TEST_PASSWORD,
+    database: process.env.DATABASE_TEST_NAME,
+    host: process.env.DATABASE_TEST_HOST,
+    port: process.env.DATABASE_TEST_PORT,
+    dialect: 'mysql'
+  },
+  prod: {
+    username: process.env.DATABASE_PROD_USERNAME,
+    password: process.env.DATABASE_PROD_PASSWORD,
+    database: process.env.DATABASE_PROD_NAME,
+    host: process.env.DATABASE_PROD_HOST,
+    port: process.env.DATABASE_PROD_PORT,
     dialect: 'mysql',
     dialectOptions: {
       ssl: {
@@ -16,19 +34,5 @@ module.exports = {
       timestamps: false,
     },
     
-  },
-  test: {
-    username: process.env.DATABASE_USERNAME,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE_NAME,
-    host: process.env.DATABASE_HOST,
-    dialect: 'mysql'
-  },
-  production: {
-    username: process.env.DATABASE_USERNAME,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE_NAME,
-    host: process.env.DATABASE_HOST,
-    dialect: 'mysql'
   }
 };
