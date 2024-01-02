@@ -1,4 +1,4 @@
-const modelTasks = require("../models/task");
+const modelTasks = require("../models/Task");
 const errorMessages = require("../utils/errorMessages");
 
 const Sequelize = require("sequelize");
@@ -9,6 +9,7 @@ const createResponse = (task) => {
     name: task.name,
     description: task.description,
     date: task.date,
+    status: task.status,
     priority: task.priority,
     isRoutine: task.isRoutine,
     routineFrequency: {
@@ -52,6 +53,7 @@ module.exports = {
       const modelTask = {
         name: task.name,
         description: task.description,
+        status: task.status,
         date: task.date,
         priority: task.priority,
         isRoutine: task.isRoutine,
@@ -82,7 +84,7 @@ module.exports = {
       task.description = req.body.description;
       task.date = req.body.date;
       task.priority = req.body.priority;
-
+      task.status = req.body.status
       if (req.body.routineFrequency) {
         if (req.body.routineFrequency.startDate && req.body.routineFrequency.endDate) {
           task.startDateRoutine = req.body.routineFrequency.startDate;

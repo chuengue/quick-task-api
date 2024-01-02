@@ -17,14 +17,7 @@ const database = new sequelize(
       timestamps: false,
     },
   },
-  
+    console.log("conexao com banco feita com sucesso"),
 );
 
-database.sync()
-   .then(() => {
-      console.log(`Conexão com o banco de dados de ${env} estabelecida com sucesso.`);
-   })
-   .catch((error) => {
-      console.error('Erro ao conectar-se ao banco de dados:', error);
-   });
 module.exports = database;

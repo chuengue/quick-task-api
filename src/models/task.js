@@ -1,5 +1,6 @@
 const sequelize = require("sequelize");
 const database = require("../db");
+const User = require("./user");
 const schema = "";
 
 class Tasks extends sequelize.Model {}
@@ -11,6 +12,10 @@ Tasks.init(
       allowNull: false,
       primaryKey: true,
       defaultValue: sequelize.UUIDV4,
+    },
+    status:{
+      type: sequelize.TEXT,
+      allowNull: true,
     },
     name: {
       type: sequelize.TEXT,
@@ -45,6 +50,7 @@ Tasks.init(
     modelName: "tasks",
     schema: schema,
   },
+  
 );
 
 module.exports = Tasks;
